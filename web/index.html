@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TaskFlow — Smart Task Management System for Software Configuration Management & Build Tools. Built with modern Midnight Aurora UI aesthetics.">
+  <title>TaskFlow — Smart Task Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Left Navigation Sidebar -->
+    <aside id="sidebar" aria-label="Sidebar Navigation">
+      <div class="brand-section">
+        <div class="brand-icon" aria-hidden="true">✓</div>
+        <div class="brand-text">
+          <h1 class="brand-title">TaskFlow</h1>
+          <span class="brand-tagline">Smart Task System</span>
+        </div>
+      </div>
+
+      <button id="btn-sidebar-new-task" class="btn-primary" type="button">
+        <span aria-hidden="true">+</span> New Task
+      </button>
+
+      <span class="nav-header">NAVIGATION</span>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item active" data-view="dashboard">
+            <button id="nav-btn-dashboard" type="button">
+              <span class="nav-icon" aria-hidden="true">📊</span>
+              <span>Dashboard</span>
+            </button>
+          </li>
+          <li class="nav-item" data-view="all">
+            <button id="nav-btn-all" type="button">
+              <span class="nav-icon" aria-hidden="true">📋</span>
+              <span>All Tasks</span>
+            </button>
+          </li>
+          <li class="nav-item" data-view="today">
+            <button id="nav-btn-today" type="button">
+              <span class="nav-icon" aria-hidden="true">📅</span>
+              <span>Today</span>
+            </button>
+          </li>
+          <li class="nav-item" data-view="upcoming">
+            <button id="nav-btn-upcoming" type="button">
+              <span class="nav-icon" aria-hidden="true">⏳</span>
+              <span>Upcoming</span>
+            </button>
+          </li>
+          <li class="nav-item" data-view="completed">
+            <button id="nav-btn-completed" type="button">
+              <span class="nav-icon" aria-hidden="true">✅</span>
+              <span>Completed</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="footer-title">SCM Mini Project</p>
+        <p class="footer-sub">Java 17 &bull; Maven &bull; Jenkins CI</p>
+      </div>
+    </aside>
+
+    <!-- Main Application Panel -->
+    <main id="main-content">
+      <!-- Top Application Header -->
+      <header id="top-header">
+        <div class="header-left">
+          <h2 class="header-greeting-title">Let's make today productive.</h2>
+          <span id="current-date-display" class="header-date">Loading date...</span>
+        </div>
+
+        <div class="header-right">
+          <div class="search-input-wrapper">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="global-search-input" placeholder="Search tasks by title, desc..." aria-label="Global Task Search">
+          </div>
+
+          <button id="btn-header-new-task" class="btn-primary" type="button">
+            <span aria-hidden="true">+</span> New Task
+          </button>
+
+          <div class="user-avatar" id="user-avatar-badge" title="TaskFlow Student Profile" aria-label="TaskFlow Profile initials">
+            TF
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Views Container -->
+      <div id="views-container">
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-section active" aria-labelledby="dashboard-heading">
+          <h2 id="dashboard-heading" class="sr-only" style="display:none;">Dashboard Overview</h2>
+          
+          <!-- Welcome Hero Banner -->
+          <div class="welcome-hero">
+            <div class="welcome-hero-content">
+              <h3 class="welcome-hero-title">Welcome back to TaskFlow</h3>
+              <p class="welcome-hero-sub">Midnight Aurora Workspace &bull; Stay on track with your SCM deliverables</p>
+            </div>
+            <button id="btn-hero-new-task" class="btn-primary" type="button">
+              + Create Task
+            </button>
+          </div>
+
+          <!-- 4 Summary Stat Cards -->
+          <div class="stat-cards-grid">
+            <div class="stat-card total" id="card-stat-total">
+              <div class="stat-card-top-stripe"></div>
+              <div class="stat-card-header">
+                <span class="stat-card-label">Total Tasks</span>
+                <span class="stat-card-badge">📋</span>
+              </div>
+              <div class="stat-card-value" id="stat-total-value">0</div>
+              <div class="stat-card-sub">All backlog tasks</div>
+            </div>
+
+            <div class="stat-card completed" id="card-stat-completed">
+              <div class="stat-card-top-stripe"></div>
+              <div class="stat-card-header">
+                <span class="stat-card-label">Completed</span>
+                <span class="stat-card-badge">✓</span>
+              </div>
+              <div class="stat-card-value" id="stat-completed-value">0</div>
+              <div class="stat-card-sub">Finished successfully</div>
+            </div>
+
+            <div class="stat-card pending" id="card-stat-pending">
+              <div class="stat-card-top-stripe"></div>
+              <div class="stat-card-header">
+                <span class="stat-card-label">Pending</span>
+                <span class="stat-card-badge">⏳</span>
+              </div>
+              <div class="stat-card-value" id="stat-pending-value">0</div>
+              <div class="stat-card-sub">Awaiting completion</div>
+            </div>
+
+            <div class="stat-card high" id="card-stat-high">
+              <div class="stat-card-top-stripe"></div>
+              <div class="stat-card-header">
+                <span class="stat-card-label">High Priority</span>
+                <span class="stat-card-badge">⚡</span>
+              </div>
+              <div class="stat-card-value" id="stat-high-value">0</div>
+              <div class="stat-card-sub">Urgent attention needed</div>
+            </div>
+          </div>
+
+          <!-- Task Progress Section -->
+          <div class="progress-section-card">
+            <div class="progress-header">
+              <span class="progress-title">Task Completion Progress</span>
+              <span id="progress-percentage-label" class="progress-percentage">0.0%</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-footer">
+              <span id="progress-status-msg" class="progress-status-msg">Ready to begin!</span>
+              <span id="progress-ratio-label" class="progress-ratio">0 of 0 tasks completed</span>
+            </div>
+          </div>
+
+          <!-- High Priority / Urgent Tasks Section -->
+          <div class="urgent-section">
+            <div class="section-header-bar">
+              <h3 class="section-title">High Priority & Active Tasks</h3>
+              <button id="btn-view-all-urgent" class="btn-secondary" type="button">
+                View All Tasks &rarr;
+              </button>
+            </div>
+            <div id="urgent-tasks-container" class="tasks-container">
+              <!-- Rendered via JavaScript -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. TASKS LIST VIEW -->
+        <section id="view-tasks" class="view-section" aria-labelledby="tasks-view-title">
+          <div class="section-header-bar" style="margin-bottom: 20px;">
+            <div>
+              <h2 id="tasks-view-title" class="section-title" style="font-size: 1.4rem;">All Tasks</h2>
+              <p id="tasks-view-subtitle" style="font-size: 0.85rem; color: var(--text-secondary);">Everything in your task backlog</p>
+            </div>
+            <button id="btn-tasks-toolbar-new-task" class="btn-primary" type="button">
+              + New Task
+            </button>
+          </div>
+
+          <!-- Filters Toolbar -->
+          <div class="tasks-toolbar">
+            <div class="search-input-wrapper" style="flex: 1; max-width: 360px;">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="text" id="tasks-filter-search" placeholder="Filter by title or description..." aria-label="Filter tasks">
+            </div>
+
+            <div class="filters-group">
+              <select id="filter-category-select" class="select-filter" aria-label="Filter by Category">
+                <option value="ALL">All Categories</option>
+                <option value="Study">Study</option>
+                <option value="Work">Work</option>
+                <option value="Project">Project</option>
+                <option value="Personal">Personal</option>
+                <option value="Other">Other</option>
+              </select>
+
+              <select id="filter-priority-select" class="select-filter" aria-label="Filter by Priority">
+                <option value="ALL">All Priorities</option>
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+
+              <select id="sort-select" class="select-filter" aria-label="Sort Tasks">
+                <option value="DATE_ASC">Due Date (Earliest)</option>
+                <option value="DATE_DESC">Due Date (Latest)</option>
+                <option value="PRIORITY_DESC">Priority (High to Low)</option>
+                <option value="TITLE_ASC">Title (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Task Cards List -->
+          <div id="all-tasks-container" class="tasks-container">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="tasks-empty-state" class="empty-state-panel" style="display: none;">
+            <div class="empty-state-icon" aria-hidden="true">📝</div>
+            <h3 class="empty-state-title" id="empty-state-title">No tasks found</h3>
+            <p class="empty-state-sub" id="empty-state-sub">Try adjusting your filters or click "+ New Task" to create a task.</p>
+            <button id="btn-empty-state-create" class="btn-primary" type="button">
+              + Create Task
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create & Edit Task Modal Dialog -->
+  <dialog id="task-dialog" aria-labelledby="modal-task-title">
+    <div class="modal-content-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-task-title" class="modal-title">Create New Task</h3>
+          <p id="modal-task-sub" class="modal-sub">Fill in the details to plan your workflow</p>
+        </div>
+        <button id="btn-close-task-dialog" class="modal-close-btn" type="button" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="task-form" method="dialog">
+        <input type="hidden" id="task-edit-id" value="">
+
+        <div class="form-group">
+          <label for="input-task-title" class="form-label">Task Title *</label>
+          <input type="text" id="input-task-title" class="form-input" placeholder="e.g. Complete Maven practical" required>
+          <span id="title-error-msg" class="form-error-msg">Task title is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="input-task-desc" class="form-label">Description</label>
+          <textarea id="input-task-desc" class="form-textarea" placeholder="Add key notes, steps, or SCM requirements..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="select-task-category" class="form-label">Category</label>
+            <select id="select-task-category" class="form-select">
+              <option value="Project">Project</option>
+              <option value="Study">Study</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="select-task-priority" class="form-label">Priority</label>
+            <select id="select-task-priority" class="form-select">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-task-duedate" class="form-label">Due Date (YYYY-MM-DD)</label>
+          <input type="date" id="input-task-duedate" class="form-input">
+          <div class="date-presets">
+            <button type="button" class="date-preset-chip" data-offset="0">Today</button>
+            <button type="button" class="date-preset-chip" data-offset="1">Tomorrow</button>
+            <button type="button" class="date-preset-chip" data-offset="3">+3 Days</button>
+            <button type="button" class="date-preset-chip" data-offset="7">+1 Week</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-cancel-task-dialog" type="button" class="btn-secondary">Cancel</button>
+          <button id="btn-save-task" type="submit" class="btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Delete Confirmation Modal Dialog -->
+  <dialog id="delete-dialog" aria-labelledby="modal-delete-title">
+    <div class="modal-content-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-delete-title" class="modal-title" style="color: var(--status-red);">Confirm Deletion</h3>
+          <p class="modal-sub">Are you sure you want to remove this task?</p>
+        </div>
+        <button id="btn-close-delete-dialog" class="modal-close-btn" type="button" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <p id="delete-task-prompt" style="font-size: 0.92rem; color: var(--text-primary); margin-bottom: 24px;"></p>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-delete" type="button" class="btn-secondary">Keep Task</button>
+        <button id="btn-confirm-delete" type="button" class="btn-danger" style="padding: 10px 18px;">Delete Permanently</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
